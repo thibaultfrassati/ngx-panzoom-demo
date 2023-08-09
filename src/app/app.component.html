@@ -1,0 +1,31 @@
+<pan-zoom [config]="panZoomConfig" (mousemove)="onMouseMove($event)" (mouseup)="onMouseUp()" >
+<svg id="map" xmlns="http://www.w3.org/2000/svg" width="800" height="600" #mapContainer (click)="addCircle($event)">
+    <image href="assets/plan-1.jpg" width="800" height="600" />
+
+  <circle appDraggable
+    *ngFor="let circle of circles; let i = index"
+    [attr.cx]="circle.x" [attr.cy]="circle.y" r="10"
+    [class]="{ 'selected': i === selectedCircleIndex }"
+    [attr.fill]="i === selectedCircleIndex ? 'blue' : 'red'"
+    (click)="selectCircle(i, $event)"
+    (mousedown)="onMouseDown($event)"
+    [draggableData]="{ x: circle.x, y: circle.y }"
+  >
+  </circle>
+  </svg>
+  <div class="circle-menu" *ngIf="selectedCircleIndex !== null">
+    <div class="circle-menu-header">
+      <button class="close-button" (click)="closeMenu()">
+        <i class="fa fa-times" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <div class="circle-menu-content">
+      <p>Coordonnées du point :</p>
+      <p><strong>X:</strong> {{ circles[selectedCircleIndex]?.x.toFixed() }}</p>
+      <p><strong>Y:</strong> {{ circles[selectedCircleIndex]?.y.toFixed() }}</p>
+      <button class="menu-button" (click)="removeSelectedCircle()">Supprimer</button>
+      <button class="menu-button" (click)="startDrag($event, selectedCircleIndex); $event.stopPropagation()">Déplacer</button>
+    </div>
+  </div>
+</pan-zoom>
